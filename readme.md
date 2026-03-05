@@ -1,35 +1,35 @@
-# 🎬 Anime Search Application
+# Anime Search Application
 
-A modern, production-ready anime search and discovery web application built with React, TypeScript, and Tailwind CSS. Search from thousands of anime titles using the Jikan API (MyAnimeList database).
+A clean, production-ready anime search and discovery web application built with React, TypeScript, and Tailwind CSS. Search from thousands of anime titles using the Jikan API (MyAnimeList database).
 
 ![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38BDF8?logo=tailwindcss)
 ![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?logo=vite)
 
-## ✨ Features
+## Features
 
 ### Core Functionality
-- **🔍 Smart Search**: Real-time anime search with 400ms debouncing and content filtering
-- **📑 Pagination**: Navigate through search results with intelligent page controls and URL state
-- **🎯 Filters**: Filter anime by type, status, rating, and year
-- **🔄 Sorting**: Sort results by title, score, popularity, or year
-- **📱 Responsive Design**: Seamless experience across mobile, tablet, and desktop devices
-- **❤️ Favorites System**: Save your favorite anime with persistent local storage
-- **🎨 Modern UI**: Clean, intuitive interface with smooth animations
-- **🛡️ Content Safety**: Automatic filtering of inappropriate/sensitive content
+- **Search**: Real-time anime search with 400ms debouncing and content filtering
+- **Pagination**: Navigate results with page controls and URL state
+- **Filters**: Filter anime by type, status, rating, and year
+- **Sorting**: Sort results by title, score, popularity, or year
+- **Responsive Layout**: Works on mobile, tablet, and desktop
+- **Favorites**: Save favorite anime to local storage
+- **Clean UI**: Minimal, readable interface with subtle transitions
+- **Content Safety**: Automatic filtering of sensitive content
 
 ### Advanced Features
-- **⚡ Performance Optimized**: Request debouncing, lazy image loading, and smart caching
-- **🔄 Retry Mechanism**: Automatic retry on failed requests with exponential backoff (up to 3 retries)
-- **♿ Accessibility**: ARIA labels, keyboard navigation, and semantic HTML
-- **📊 Loading States**: Beautiful skeleton loaders and spinners
-- **🎉 Toast Notifications**: User-friendly feedback for actions
-- **🔝 Scroll to Top**: Automatic smooth scroll to top on pagination
-- **🌐 Deep Linking**: Shareable URLs with filter and page state
-- **🎭 Image Lazy Loading**: Optimized image loading with placeholders
-- **⚠️ Error Handling**: Comprehensive error states with retry options
-- **📈 Rate Limit Handling**: Handles API 429 errors with automatic retry
+- **Performance**: Request debouncing, lazy image loading, and smart caching
+- **Retry**: Automatic retry on failed requests (up to 3 retries)
+- **Accessibility**: ARIA labels, keyboard navigation, and semantic HTML
+- **Loading States**: Skeleton loaders and spinners
+- **Toast Notifications**: Feedback for actions
+- **Scroll to Top**: Smooth scroll to top on pagination
+- **Deep Linking**: Shareable URLs with filter and page state
+- **Image Lazy Loading**: Optimized image loading with placeholders
+- **Error Handling**: Clear error states with retry options
+- **Rate Limit Handling**: Handles API 429 errors with automatic retry
 
 ## 🛠️ Tech Stack
 
@@ -140,6 +140,7 @@ yarn preview
 2. Results appear in real-time with 400ms debouncing
 3. Search query is maintained across page navigation
 4. Leave search empty to see popular anime
+5. Placeholder text is "Search..."
 
 ### View Details
 1. Click on any anime card to view full details
@@ -148,11 +149,10 @@ yarn preview
 4. Anime details page shows all available information
 
 ### Manage Favorites
-1. Click the heart icon (❤️ or 🤍) on any anime card
-2. Heart turns red (❤️) when favorited
-3. Favorites are saved to local storage automatically
-4. View your total favorites count in the header
-5. Favorites persist across browser sessions
+1. Click the Favorite or Remove button on any anime card
+2. Favorites are saved to local storage automatically
+3. View your total favorites count in the header
+4. Favorites persist across browser sessions
 
 ### Navigate Results
 - Use Previous/Next buttons for pagination
@@ -300,7 +300,7 @@ loadFavorites(): void
 - **Persists**: Across browser sessions
 - **Size**: Typically < 10KB for hundreds of favorites
 
-## 🎨 Styling & Customization
+## Styling & Customization
 
 The application uses **Tailwind CSS 4** for styling.
 
@@ -309,17 +309,11 @@ The application uses **Tailwind CSS 4** for styling.
 Located in `src/index.css`:
 
 ```css
-/* Fade in with slight upward movement (0.3s) */
+/* Simple fade in */
 .animate-fade-in
 
-/* Slide up animation for notifications (0.3s) */
+/* Slide up for notifications */
 .animate-slide-up
-
-/* Slide in from right animation (0.3s) */
-.animate-slide-in-right
-
-/* Shimmer effect for skeleton loaders (2s infinite) */
-.animate-shimmer
 ```
 
 ### Customization
@@ -346,7 +340,7 @@ Located in `src/index.css`:
 [ ] Click next → Navigates to next page
 [ ] Click previous → Navigates to previous page
 [ ] Click page number → Jumps to specific page
-[ ] First page → No previous button click
+[ ] First page → No prev]ous button click
 [ ] Last page → No next button click
 [ ] URL updates → Reflects current page
 ```
@@ -505,7 +499,7 @@ Contributions are welcome! Please follow this process:
 
 This project is licensed under the MIT License - feel free to use in personal or commercial projects.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Jikan API](https://jikan.moe/) - Free MyAnimeList API
 - [MyAnimeList](https://myanimelist.net/) - Comprehensive anime database
@@ -530,4 +524,4 @@ For issues, questions, or suggestions:
 - **Status**: Production Ready ✅
 - **Maintenance**: Active
 
-Built with ❤️ for anime enthusiasts worldwide
+Built for anime enthusiasts worldwide

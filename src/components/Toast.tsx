@@ -8,27 +8,39 @@ interface ToastProps {
 
 export const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
   const colors = {
-    success: 'bg-green-500',
-    error: 'bg-red-500',
-    info: 'bg-blue-500',
+    success: 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 border-green-300 shadow-lg',
+    error: 'bg-gradient-to-r from-red-50 to-rose-50 text-red-800 border-red-300 shadow-lg',
+    info: 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-800 border-blue-300 shadow-lg',
   };
 
   const icons = {
     success: '✓',
-    error: '✕',
+    error: '×',
     info: 'ℹ',
   };
 
+  const iconBg = {
+    success: 'bg-green-200',
+    error: 'bg-red-200',
+    info: 'bg-blue-200',
+  };
+
   React.useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
+    const timer = setTimeout(onClose, 3500);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className={`fixed bottom-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-slide-up z-50`}>
-      <span className="text-xl font-bold">{icons[type]}</span>
-      <span className="font-medium">{message}</span>
-      <button onClick={onClose} className="ml-2 text-xl hover:opacity-75">
+    <div className={`fixed bottom-6 right-6 ${colors[type]} border px-5 py-4 rounded-lg flex items-center gap-3 animate-slide-up z-50 max-w-sm`}>
+      <span className={`${iconBg[type]} w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0`} aria-hidden="true">
+        {icons[type]}
+      </span>
+      <span className="text-sm font-semibold flex-1">{message}</span>
+      <button 
+        onClick={onClose} 
+        className="ml-2 text-lg font-bold text-current opacity-60 hover:opacity-100 transition-opacity flex-shrink-0" 
+        aria-label="Close notification"
+      >
         ×
       </button>
     </div>

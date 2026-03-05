@@ -4,7 +4,7 @@ import { animeAPI } from '@/services/api';
 
 export { useSound } from './useSound';
 
-export const useDebounce = <T,>(value: T, delay: number = 500): T => {
+export const useDebounce = <T,>(value: T, delay: number = 700): T => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -28,6 +28,10 @@ interface UseAnimeSearchResult {
   search: (query: string, page: number) => Promise<void>;
 }
 
+// Simple search result cache
+const searchCache = new Map<string, { data: Anime[]; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 export const useAnimeSearch = (): UseAnimeSearchResult => {
   const [animes, setAnimes] = useState<Anime[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,6 +51,15 @@ export const useAnimeSearch = (): UseAnimeSearchResult => {
         return;
       }
       
+      // Check cache first
+      const cacheKey = `${query}|${page}`;
+      const cached = searchCache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        setAnimes(cached.data);
+        setLoading(false);
+        return;
+      }
+      
       pendingRequestRef.current = requestKey;
       setLoading(true);
       setError(null);
@@ -54,6 +67,12 @@ export const useAnimeSearch = (): UseAnimeSearchResult => {
       const performSearch = async (retryCount: number = 0): Promise<void> => {
         try {
           const response = await animeAPI.searchAnime(query, page, 6);
+          
+          // Cache the results
+          searchCache.set(cacheKey, {
+            data: response.data,
+            timestamp: Date.now(),
+          });
           
           // Only update if this is still the pending request
           if (pendingRequestRef.current === requestKey) {

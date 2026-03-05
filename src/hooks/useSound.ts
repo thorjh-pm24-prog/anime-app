@@ -1,112 +1,64 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
-type SoundType = 'click' | 'favorite' | 'card' | 'success' | 'hover';
+const createClickSoundUrl = () => {
+  const sampleRate = 8000;
+  const durationSeconds = 0.05;
+  const samples = Math.floor(sampleRate * durationSeconds);
+  const dataSize = samples;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
 
-// Sound configurations using Web Audio API
-const soundConfigs = {
-  click: { frequency: 800, duration: 0.1, type: 'sine' as OscillatorType },
-  favorite: { frequency: 1200, duration: 0.15, type: 'sine' as OscillatorType },
-  card: { frequency: 600, duration: 0.12, type: 'triangle' as OscillatorType },
-  success: { frequency: 1000, duration: 0.2, type: 'square' as OscillatorType },
-  hover: { frequency: 500, duration: 0.05, type: 'sine' as OscillatorType },
+  const writeString = (offset: number, value: string) => {
+    for (let i = 0; i < value.length; i += 1) {
+      view.setUint8(offset + i, value.charCodeAt(i));
+    }
+  };
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate, true);
+  view.setUint16(32, 1, true);
+  view.setUint16(34, 8, true);
+  writeString(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  for (let i = 0; i < samples; i += 1) {
+    const decay = Math.max(0, 1 - i / (samples * 0.6));
+    const amplitude = i < 6 ? 80 : i < 18 ? 40 : 0;
+    const sample = 128 + Math.round(amplitude * decay);
+    view.setUint8(44 + i, sample);
+  }
+
+  const blob = new Blob([buffer], { type: 'audio/wav' });
+  return URL.createObjectURL(blob);
 };
 
-// Anime-themed sound effects (kawaii beeps)
 export const useSound = () => {
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const enabledRef = useRef(true);
+  const clickUrl = useMemo(() => createClickSoundUrl(), []);
 
-  const getAudioContext = useCallback(() => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const getAudio = useCallback(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(clickUrl);
+      audioRef.current.preload = 'auto';
     }
-    return audioContextRef.current;
-  }, []);
+    return audioRef.current;
+  }, [clickUrl]);
 
-  const playSound = useCallback((soundType: SoundType = 'click', volume: number = 0.3) => {
+  const playClick = useCallback((volume: number = 0.15) => {
     if (!enabledRef.current) return;
-
-    try {
-      const audioContext = getAudioContext();
-      const config = soundConfigs[soundType];
-
-      // Create oscillator for the main tone
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.type = config.type;
-      oscillator.frequency.setValueAtTime(config.frequency, audioContext.currentTime);
-
-      // Envelope for smooth sound
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + config.duration);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + config.duration);
-    } catch (error) {
-      console.error('Error playing sound:', error);
-    }
-  }, [getAudioContext]);
-
-  // Play anime-style "kawaii" click sound
-  const playKawaiClick = useCallback(() => {
-    try {
-      const audioContext = getAudioContext();
-      const now = audioContext.currentTime;
-
-      // First tone (high)
-      const osc1 = audioContext.createOscillator();
-      const gain1 = audioContext.createGain();
-      osc1.connect(gain1);
-      gain1.connect(audioContext.destination);
-      osc1.frequency.setValueAtTime(1000, now);
-      gain1.gain.setValueAtTime(0.2, now);
-      gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-      osc1.start(now);
-      osc1.stop(now + 0.1);
-
-      // Second tone (lower, delayed)
-      const osc2 = audioContext.createOscillator();
-      const gain2 = audioContext.createGain();
-      osc2.connect(gain2);
-      gain2.connect(audioContext.destination);
-      osc2.frequency.setValueAtTime(800, now + 0.05);
-      gain2.gain.setValueAtTime(0.15, now + 0.05);
-      gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-      osc2.start(now + 0.05);
-      osc2.stop(now + 0.15);
-    } catch (error) {
-      console.error('Error playing kawaii click:', error);
-    }
-  }, [getAudioContext]);
-
-  // Play "pop" sound for favorites
-  const playPopSound = useCallback(() => {
-    try {
-      const audioContext = getAudioContext();
-      const now = audioContext.currentTime;
-
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      osc.connect(gain);
-      gain.connect(audioContext.destination);
-
-      osc.frequency.setValueAtTime(1200, now);
-      osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
-      
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-
-      osc.start(now);
-      osc.stop(now + 0.15);
-    } catch (error) {
-      console.error('Error playing pop sound:', error);
-    }
-  }, [getAudioContext]);
+    const audio = getAudio();
+    audio.volume = volume;
+    audio.currentTime = 0;
+    audio.play().catch(() => undefined);
+  }, [getAudio]);
 
   const toggleSound = useCallback(() => {
     enabledRef.current = !enabledRef.current;
@@ -116,9 +68,7 @@ export const useSound = () => {
   const isSoundEnabled = useCallback(() => enabledRef.current, []);
 
   return {
-    playSound,
-    playKawaiClick,
-    playPopSound,
+    playClick,
     toggleSound,
     isSoundEnabled,
   };

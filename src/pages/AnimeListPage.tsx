@@ -9,6 +9,7 @@ import { SortBar } from '@/components/SortBar';
 import { AnimeGrid } from '@/components/AnimeGrid';
 import { Pagination } from '@/components/Pagination';
 import { Header } from '@/components/Header';
+import { DevicePreview, type DeviceType } from '@/components/DevicePreview';
 import { LoadingSpinner, ErrorMessage, EmptyState } from '@/components/common';
 import { MainContent, SkipToMainContent, ResultAnnouncement } from '@/components/Accessibility';
 
@@ -22,7 +23,7 @@ export const AnimeListPage: React.FC = () => {
   const [filters, setFilters] = useState<Partial<FilterOptions>>({
     type: searchParams.get('type') || undefined,
     status: searchParams.get('status') || undefined,
-    year: searchParams.get('year') ? parseInt(searchParams.get('year')!) : null,
+    year: searchParams.get('year') ? parseInt(searchParams.get('year')!) : undefined,
     rating: searchParams.get('rating') || undefined,
   });
   const [sortBy, setSortBy] = useState<SortOption>((searchParams.get('sortBy') as SortOption) || 'score');
@@ -137,7 +138,7 @@ export const AnimeListPage: React.FC = () => {
     const emptyFilters: Partial<FilterOptions> = {
       type: undefined,
       status: undefined,
-      year: null,
+      year: undefined,
       rating: undefined,
     };
     setFilters(emptyFilters);
@@ -177,24 +178,32 @@ export const AnimeListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
       <SkipToMainContent />
       <Header />
 
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-16 z-30">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col gap-4">
+      {/* Device View Selector - Fixed Top Right Corner */}
+      <div className="fixed top-4 right-4 sm:top-5 sm:right-6 z-50 bg-white rounded-lg border border-gray-200 border-opacity-70 shadow-lg p-2.5 sm:p-3">
+        <DevicePreview
+          currentDevice={deviceMode as DeviceType}
+          onDeviceChange={(device) => setDeviceMode(device as any)}
+        />
+      </div>
+
+      <header className="bg-white border-b border-gray-200 border-opacity-50 sticky top-16 z-30 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex flex-col gap-5">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                Anime Explorer
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent mb-2">
+                Anime Discovery
               </h1>
-              <p className="text-gray-600">Discover, search, and track your favorite anime</p>
+              <p className="text-sm text-gray-600">Find and save your favorite anime titles</p>
             </div>
             
             <SearchBar
               onSearch={handleSearch}
               initialValue={searchInput}
-              placeholder="Search anime by name, genre, or studio..."
+              placeholder="Search anime by title, genre, or character..."
             />
           </div>
         </div>
@@ -204,18 +213,13 @@ export const AnimeListPage: React.FC = () => {
       <MainContent>
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Control Bar */}
-          <div className="mb-8 bg-white rounded-lg shadow-sm p-4">
-            <div className="flex flex-col gap-4">
-              {/* Filters and Sort */}
-              <div className="space-y-4">
-                <FilterBar 
-                  onFilterApply={handleFilterApply} 
-                  onFilterReset={handleFilterReset}
-                  initialFilters={filters} 
-                />
-                <SortBar sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
-              </div>
-            </div>
+          <div className="mb-8 space-y-4">
+            <FilterBar 
+              onFilterApply={handleFilterApply} 
+              onFilterReset={handleFilterReset}
+              initialFilters={filters} 
+            />
+            <SortBar sortBy={sortBy} sortOrder={sortOrder} onSortChange={handleSortChange} />
           </div>
 
           {/* Result Count and Announcement */}
@@ -238,20 +242,19 @@ export const AnimeListPage: React.FC = () => {
                   ? 'Try different keywords or adjust your filters'
                   : 'Enter a search term to discover amazing anime'
               }
-              icon={searchInput ? '😢' : '🔍'}
             />
           )}
 
           {/* Anime Grid */}
           {!loading && !error && filteredAndSortedAnimes.length > 0 && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Results Summary */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="text-sm text-gray-600">
-                  Showing <span className="font-semibold text-gray-900">{filteredAndSortedAnimes.length}</span> result{filteredAndSortedAnimes.length !== 1 ? 's' : ''}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200 border-opacity-50">
+                <div className="text-sm text-gray-700 font-medium">
+                  Showing <span className="font-bold text-blue-600">{filteredAndSortedAnimes.length}</span> result{filteredAndSortedAnimes.length !== 1 ? 's' : ''}
                   {Object.values(filters).some(v => v) && (
-                    <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                      Filters applied
+                    <span className="ml-3 px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs rounded-full font-semibold border border-blue-200">
+                      Filters active
                     </span>
                   )}
                 </div>
@@ -267,7 +270,7 @@ export const AnimeListPage: React.FC = () => {
 
               {/* Pagination */}
               {animes.length > 0 && (
-                <div className="mt-8">
+                <div className="mt-8 pb-8">
                   <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
@@ -279,34 +282,6 @@ export const AnimeListPage: React.FC = () => {
           )}
         </div>
       </MainContent>
-
-      {/* Footer */}
-      <footer className="mt-auto border-t bg-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">About</h3>
-              <p className="text-sm text-gray-600">Anime Explorer helps you discover and track your favorite anime with ease.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Data Source</h3>
-              <p className="text-sm text-gray-600">All anime data is provided by the Jikan API, powered by MyAnimeList.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Features</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>🎬 Grid, List & Compact views</li>
-                <li>❤️ Favorites with local storage</li>
-                <li>🔍 Advanced filtering & sorting</li>
-                <li>♿ Full accessibility support</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t pt-8 text-center text-sm text-gray-500">
-            <p>© 2026 Anime Explorer • Accessible Design • Built with React & TypeScript</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Anime, AnimeListResponse, AnimeDetailResponse } from '@/types';
 const API_BASE = 'https://api.jikan.moe/v4';
 const axiosInstance = axios.create({
   baseURL: API_BASE,
-  timeout: 10000,
+  timeout: 15000,
 });
 
 // Simple error passthrough - don't retry here (handle in hook)

@@ -17,7 +17,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { isFavorite, addFavorite, removeFavorite } = useAnimeStore();
-  const { playKawaiClick, playPopSound } = useSound();
+  const { playClick } = useSound();
   const favorite = isFavorite(anime.mal_id);
 
   const imageUrl = imageError
@@ -26,7 +26,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    playPopSound();
+    playClick();
     if (favorite) {
       removeFavorite(anime.mal_id);
     } else {
@@ -35,7 +35,6 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
   };
 
   const handleCardClick = () => {
-    playKawaiClick();
     onClick(anime);
   };
 
@@ -44,7 +43,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
     return (
       <div
         onClick={handleCardClick}
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer p-4 flex gap-4 animate-fade-in hover:translate-y-(-2px)"
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer p-5 flex gap-4 border border-gray-100 hover:-translate-y-0.5 group"
         tabIndex={0}
         role="button"
         aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -55,9 +54,9 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
         }}
       >
         {/* Image */}
-        <div className="flex-shrink-0 w-24 h-32 relative group overflow-hidden rounded-md">
+        <div className="flex-shrink-0 w-28 h-36 relative overflow-hidden rounded-lg border border-gray-200 shadow-md">
           {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-300 to-gray-200 animate-pulse"></div>
+            <div className="absolute inset-0 animate-shimmer"></div>
           )}
           <img
             src={imageUrl}
@@ -65,41 +64,41 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageError(true)}
-            className={`w-full h-full object-cover transition-scale duration-300 group-hover:scale-105 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-transform duration-300 ${
+              imageLoaded ? 'opacity-100 group-hover:scale-105' : 'opacity-0'
             }`}
           />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 truncate hover:text-blue-600 transition-colors" title={anime.title}>
+          <h3 className="text-base font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors" title={anime.title}>
             {anime.title}
           </h3>
-          <p className="text-sm text-gray-600 line-clamp-2 mt-1">
+          <p className="text-sm text-gray-600 line-clamp-2 mt-2">
             {anime.synopsis || 'No synopsis available.'}
           </p>
 
           {/* Meta Info */}
-          <div className="flex flex-wrap gap-2 mt-3 text-xs text-gray-600">
+          <div className="flex flex-wrap gap-2 mt-3 text-xs">
             {anime.type && (
-              <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded">
+              <span className="px-3 py-1 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 rounded-full font-semibold border border-blue-200">
                 {anime.type}
               </span>
             )}
             {anime.episodes && (
-              <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded">
-                {anime.episodes} Episodes
+              <span className="px-3 py-1 bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 rounded-full font-semibold border border-purple-200">
+                {anime.episodes} eps
               </span>
             )}
             {anime.year && (
-              <span className="px-2 py-1 bg-green-50 text-green-700 rounded">
+              <span className="px-3 py-1 bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 rounded-full font-semibold border border-orange-200">
                 {anime.year}
               </span>
             )}
             {anime.score && (
-              <span className="px-2 py-1 bg-yellow-50 text-yellow-700 rounded font-semibold flex items-center gap-1">
-                <span>⭐</span> {anime.score.toFixed(1)}
+              <span className="px-3 py-1 bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 rounded-full font-bold border border-yellow-200">
+                {anime.score.toFixed(1)}/10
               </span>
             )}
           </div>
@@ -108,11 +107,18 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
         {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
-          className="flex-shrink-0 p-2 text-xl hover:scale-125 transition-transform active:scale-95"
+          className={`flex-shrink-0 px-3 py-2 text-xs font-semibold rounded-lg transition-all shadow-sm flex items-center gap-1 ${
+            favorite
+              ? 'bg-red-500 text-white'
+              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          }`}
           aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
           title={favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          {favorite ? '❤️' : '🤍'}
+          <svg className="w-4 h-4" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span>{favorite ? 'Saved' : 'Save'}</span>
         </button>
       </div>
     );
@@ -123,7 +129,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
     return (
       <div
         onClick={handleCardClick}
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col group animate-fade-in hover:-translate-y-1"
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-gray-100"
         tabIndex={0}
         role="button"
         aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -134,9 +140,9 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
         }}
       >
         {/* Image Container - Smaller */}
-        <div className="relative aspect-[2/3] bg-gray-200 overflow-hidden">
+        <div className="relative aspect-[2/3] bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden">
           {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-300 to-gray-200 animate-pulse"></div>
+            <div className="absolute inset-0 animate-shimmer"></div>
           )}
           <img
             src={imageUrl}
@@ -144,24 +150,30 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageError(true)}
-            className={`w-full h-full object-cover transition-opacity duration-300 group-hover:scale-110 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-transform duration-300 ${
+              imageLoaded ? 'opacity-100 group-hover:scale-105' : 'opacity-0'
             }`}
           />
 
           {/* Favorite Button */}
           <button
             onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all transform hover:scale-110 active:scale-95"
+            className={`absolute top-2 right-2 p-1.5 text-xs font-semibold rounded-lg shadow-md transition-all flex items-center justify-center ${
+              favorite
+                ? 'bg-red-500 text-white'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+            }`}
             aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
             title={favorite ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <span className="text-lg">{favorite ? '❤️' : '🤍'}</span>
+            <svg className="w-4 h-4" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
           </button>
         </div>
 
         {/* Compact Content */}
-        <div className="p-2 flex-1 flex flex-col">
+        <div className="p-3 flex-1 flex flex-col">
           <h3
             className="text-xs font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors"
             title={anime.title}
@@ -170,8 +182,8 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
           </h3>
 
           {anime.score && (
-            <div className="mt-1 text-xs font-semibold text-yellow-600 flex items-center gap-1">
-              <span>⭐</span> {anime.score.toFixed(1)}
+            <div className="mt-2 text-xs font-bold text-gray-700 flex items-center gap-1 px-2 py-1 bg-yellow-50 rounded w-fit border border-yellow-200">
+              Score: {anime.score.toFixed(1)}
             </div>
           )}
         </div>
@@ -183,7 +195,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col group animate-fade-in hover:-translate-y-1"
+      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-gray-100"
       tabIndex={0}
       role="button"
       aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -194,9 +206,9 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
       }}
     >
       {/* Image Container */}
-      <div className="relative aspect-[2/3] bg-gray-200 overflow-hidden">
+      <div className="relative aspect-[2/3] bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden">
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-300 to-gray-200 animate-pulse"></div>
+          <div className="absolute inset-0 animate-shimmer"></div>
         )}
         <img
           src={imageUrl}
@@ -204,19 +216,25 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
-          className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-110 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
+          className={`w-full h-full object-cover transition-transform duration-300 ${
+            imageLoaded ? 'opacity-100 group-hover:scale-105' : 'opacity-0'
           }`}
         />
 
         {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
-          className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all transform hover:scale-110 active:scale-95"
+          className={`absolute top-3 right-3 p-2 text-xs font-semibold rounded-lg shadow-md transition-all flex items-center justify-center ${
+            favorite
+              ? 'bg-red-500 text-white'
+              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          }`}
           aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
           title={favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <span className="text-xl">{favorite ? '❤️' : '🤍'}</span>
+          <svg className="w-5 h-5" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
         </button>
       </div>
 
@@ -229,24 +247,21 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
           {anime.title}
         </h3>
 
-        <p className="text-sm text-gray-600 line-clamp-3 mb-3">
+        <p className="text-xs text-gray-600 line-clamp-3 mb-3 flex-1">
           {anime.synopsis || 'No synopsis available.'}
         </p>
 
         {/* Card Footer Info */}
-        <div className="mt-auto space-y-2">
+        <div className="mt-auto pt-2 border-t border-gray-100 space-y-2">
           {anime.score && (
-            <div className="flex items-center gap-1 text-sm">
-              <span className="text-yellow-500">⭐</span>
-              <span className="font-semibold text-gray-900">{anime.score.toFixed(1)}</span>
-              <span className="text-gray-600">({anime.scored_by?.toLocaleString() || 0})</span>
+            <div className="flex items-center gap-1.5 text-sm font-bold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-200">
+              Score: {anime.score.toFixed(1)}/10
             </div>
           )}
           {anime.type && (
-            <div className="flex items-center gap-1 text-xs text-gray-600">
-              <span>📺</span>
-              <span>{anime.type}</span>
-              {anime.episodes && <span className="text-gray-400">• {anime.episodes} eps</span>}
+            <div className="flex items-center gap-2 text-xs text-gray-600">
+              <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full font-semibold border border-blue-200">{anime.type}</span>
+              {anime.episodes && <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded-full font-semibold border border-purple-200">{anime.episodes} eps</span>}
             </div>
           )}
         </div>

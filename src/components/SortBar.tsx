@@ -1,5 +1,6 @@
 import React from 'react';
 import { SortOption, SortOrder } from '@/types';
+import { useSound } from '@/hooks/useSound';
 
 interface SortBarProps {
   sortBy: SortOption;
@@ -8,14 +9,21 @@ interface SortBarProps {
 }
 
 export const SortBar: React.FC<SortBarProps> = ({ sortBy, sortOrder, onSortChange }) => {
+  const { playClick } = useSound();
+
+  const handleSortChange = (nextSortBy: SortOption, nextSortOrder: SortOrder) => {
+    playClick();
+    onSortChange(nextSortBy, nextSortOrder);
+  };
+
   return (
-    <div className="flex items-center gap-4 bg-white rounded-lg shadow-md p-4 mb-6">
-      <label className="text-sm font-medium text-gray-700">Sort by:</label>
+    <div className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 border-opacity-60 shadow-sm p-4 mb-6 hover:shadow-md transition-shadow">
+      <label className="text-sm font-semibold text-gray-700 whitespace-nowrap">Sort:</label>
       
       <select
         value={sortBy}
-        onChange={(e) => onSortChange(e.target.value as SortOption, sortOrder)}
-        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        onChange={(e) => handleSortChange(e.target.value as SortOption, sortOrder)}
+        className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400 font-medium"
       >
         <option value="title">Title</option>
         <option value="score">Score</option>
@@ -25,12 +33,12 @@ export const SortBar: React.FC<SortBarProps> = ({ sortBy, sortOrder, onSortChang
 
       <button
         onClick={() =>
-          onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')
+          handleSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc')
         }
-        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+        className={`px-4 py-2.5 text-sm rounded-lg font-semibold transition-all shadow-sm ${
           sortOrder === 'asc'
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700'
+            ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:shadow-lg hover:-translate-y-0.5'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
         {sortOrder === 'asc' ? '↑ Ascending' : '↓ Descending'}

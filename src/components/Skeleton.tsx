@@ -2,9 +2,9 @@ import React from 'react';
 
 export const AnimeCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md h-full flex flex-col animate-pulse">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm h-full flex flex-col animate-pulse">
       {/* Image Skeleton */}
-      <div className="aspect-[2/3] bg-gradient-to-br from-gray-200 to-gray-300"></div>
+      <div className="aspect-[2/3] bg-gray-200"></div>
 
       {/* Content Skeleton */}
       <div className="p-4 flex-1 flex flex-col space-y-3">
@@ -45,7 +45,7 @@ export const DetailSkeleton: React.FC = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-pulse">
       {/* Left Column */}
       <div className="lg:col-span-1">
-        <div className="aspect-[2/3] bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mb-6"></div>
+        <div className="aspect-[2/3] bg-gray-200 rounded-lg mb-6"></div>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-gray-200 rounded-lg h-24"></div>
           <div className="bg-gray-200 rounded-lg h-24"></div>

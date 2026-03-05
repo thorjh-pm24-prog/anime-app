@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export type DeviceType = 'phone' | 'tablet' | 'desktop';
 
@@ -12,56 +12,127 @@ export const DEVICE_SIZES = {
   phone: {
     width: 430,
     height: 932,
-    label: '📱 iPhone',
+    label: 'Phone',
     description: 'Phone View (430px)',
   },
   tablet: {
     width: 820,
     height: 1180,
-    label: '📱 Tablet',
+    label: 'Tablet',
     description: 'Tablet View (820px)',
   },
   desktop: {
     width: 1440,
     height: 900,
-    label: '💻 Desktop',
+    label: 'Desktop',
     description: 'Desktop View (1440px)',
   },
 } as const;
+
+const DEVICE_ICONS = {
+  phone: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+  tablet: 'M12 18h.01M17 21H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z',
+  desktop: 'M9.75 17L9 20m0 0l-.75 3M9 20h6m0 0l.75 3M15 20l.75-3m-2.25-3h3.5a2 2 0 002-2V5a2 2 0 00-2-2h-3.5a2 2 0 00-2 2v10a2 2 0 002 2z',
+};
 
 export const DevicePreview: React.FC<DevicePreviewProps> = ({
   currentDevice,
   onDeviceChange,
 }) => {
-  const devices: Array<{ type: DeviceType; label: string; icon: string }> = [
-    { type: 'phone', label: 'Phone', icon: '📱' },
-    { type: 'tablet', label: 'Tablet', icon: '📱' },
-    { type: 'desktop', label: 'Desktop', icon: '💻' },
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const devices: Array<{ type: DeviceType; label: string }> = [
+    { type: 'phone', label: 'Phone' },
+    { type: 'tablet', label: 'Tablet' },
+    { type: 'desktop', label: 'Desktop' },
   ];
 
+  const currentLabel = devices.find(d => d.type === currentDevice)?.label || 'Phone';
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
+
+  const handleDeviceSelect = (device: DeviceType) => {
+    onDeviceChange(device);
+    setIsOpen(false);
+  };
+
   return (
-    <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
-      {devices.map((device) => (
+    <div className="relative" ref={menuRef}>
+      <div className="flex gap-0 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+        {/* Main button showing current device */}
         <button
-          key={device.type}
-          onClick={() => onDeviceChange(device.type)}
-          className={`
-            flex items-center justify-center gap-1 px-2 py-2 rounded-md font-medium
-            transition-all duration-200 transform hover:scale-105 active:scale-95
-            ${
-              currentDevice === device.type
-                ? 'bg-white text-blue-600 shadow-md'
-                : 'bg-transparent text-gray-600 hover:text-gray-900 hover:bg-white/50'
-            }
-          `}
-          title={device.label}
-          aria-label={`Switch to ${device.label} view`}
-          aria-pressed={currentDevice === device.type}
+          onClick={() => setIsOpen(!isOpen)}
+          className="px-3 py-1.5 sm:py-2 bg-white text-gray-900 font-medium transition-all flex items-center gap-2 text-xs sm:text-sm hover:bg-gray-50 focus:outline-none"
+          title={`Current: ${currentLabel} view`}
+          aria-label={`Device selector: ${currentLabel}`}
         >
-          <span className="text-base">{device.icon}</span>
-          <span className="hidden lg:inline text-xs">{device.label}</span>
+          <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d={DEVICE_ICONS[currentDevice]} />
+          </svg>
+          <span className="hidden sm:inline">{currentLabel}</span>
         </button>
-      ))}
+
+        {/* Dropdown toggle button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`px-2 py-1.5 sm:py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors border-l border-gray-200 focus:outline-none ${
+            isOpen ? 'bg-gray-200' : ''
+          }`}
+          aria-label="Toggle device menu"
+          aria-expanded={isOpen}
+        >
+          <svg
+            className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Dropdown menu */}
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-40">
+          {devices.map((device) => (
+            <button
+              key={device.type}
+              onClick={() => handleDeviceSelect(device.type)}
+              className={`w-full px-4 py-2.5 text-left flex items-center gap-3 font-medium transition-colors text-sm ${
+                currentDevice === device.type
+                  ? 'bg-blue-50 text-blue-600 border-l-2 border-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50 border-l-2 border-transparent'
+              } focus:outline-none`}
+              aria-label={`Switch to ${device.label} view`}
+            >
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d={DEVICE_ICONS[device.type]} />
+              </svg>
+              <span>{device.label}</span>
+              {currentDevice === device.type && (
+                <svg className="w-4 h-4 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

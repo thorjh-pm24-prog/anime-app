@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useAnimeStore } from '@/stores/animeStore';
-import { DeviceMode } from '@/types';
 
 interface DeviceViewportWrapperProps {
   children: ReactNode;

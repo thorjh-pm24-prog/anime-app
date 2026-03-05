@@ -23,15 +23,13 @@ interface ErrorMessageProps {
 export const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onRetry }) => {
   return (
     <div className="max-w-md mx-auto py-12 text-center">
-      <div className="text-4xl mb-4">⚠️</div>
       <h3 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h3>
       <p className="text-gray-600 mb-6">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <span>↻</span>
           Try Again
         </button>
       )}
@@ -48,11 +46,11 @@ interface EmptyStateProps {
 export const EmptyState: React.FC<EmptyStateProps> = ({
   title,
   message,
-  icon = '🔍',
+  icon,
 }) => {
   return (
     <div className="text-center py-16">
-      <div className="text-5xl mb-4">{icon}</div>
+      {icon && <div className="text-5xl mb-4">{icon}</div>}
       <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
       <p className="text-gray-600 max-w-md mx-auto">{message}</p>
     </div>
