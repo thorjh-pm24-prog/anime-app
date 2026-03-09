@@ -37,13 +37,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onFilterApply, onFilterRes
   const activeCount = Object.values(localFilters).filter(v => v !== undefined && v !== null).length;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 border-opacity-60 shadow-sm p-5 mb-6 hover:shadow-md transition-shadow">
+    <div className="bg-indigo-100 rounded-lg border border-indigo-200 shadow-sm p-5 mb-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-semibold text-gray-900">
           Filters
         </h3>
         {hasActiveFilters && (
-          <span className="text-xs font-semibold px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full">
+          <span className="text-xs font-semibold px-3 py-1.5 bg-indigo-200 text-indigo-700 rounded-full">
             {activeCount} active
           </span>
         )}
@@ -58,7 +58,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onFilterApply, onFilterRes
             onChange={(e) =>
               setLocalFilters({ ...localFilters, type: e.target.value || undefined })
             }
-            className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400"
+            className="w-full px-3 py-2.5 text-sm border border-indigo-300 rounded-lg bg-indigo-50 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 outline-none transition-all hover:border-indigo-400"
           >
             <option value="">All Types</option>
             <option value="TV">TV</option>
@@ -77,7 +77,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onFilterApply, onFilterRes
             onChange={(e) =>
               setLocalFilters({ ...localFilters, status: e.target.value || undefined })
             }
-            className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400"
+            className="w-full px-3 py-2.5 text-sm border border-indigo-300 rounded-lg bg-indigo-50 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 outline-none transition-all hover:border-indigo-400"
           >
             <option value="">All Status</option>
             <option value="airing">Airing</option>
@@ -94,7 +94,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onFilterApply, onFilterRes
             onChange={(e) =>
               setLocalFilters({ ...localFilters, year: e.target.value ? parseInt(e.target.value) : undefined })
             }
-            className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400"
+            className="w-full px-3 py-2.5 text-sm border border-indigo-300 rounded-lg bg-indigo-50 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 outline-none transition-all hover:border-indigo-400"
           >
             <option value="">All Years</option>
             {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - i).map(
@@ -115,7 +115,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ onFilterApply, onFilterRes
             onChange={(e) =>
               setLocalFilters({ ...localFilters, rating: e.target.value || undefined })
             }
-            className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400"
+            className="w-full px-3 py-2.5 text-sm border border-indigo-300 rounded-lg bg-indigo-50 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 outline-none transition-all hover:border-indigo-400"
           >
             <option value="">All Ratings</option>
             <option value="g">G (All Ages)</option>

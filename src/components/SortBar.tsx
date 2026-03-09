@@ -17,13 +17,13 @@ export const SortBar: React.FC<SortBarProps> = ({ sortBy, sortOrder, onSortChang
   };
 
   return (
-    <div className="flex items-center gap-3 bg-white rounded-lg border border-gray-200 border-opacity-60 shadow-sm p-4 mb-6 hover:shadow-md transition-shadow">
+    <div className="flex items-center gap-3 bg-indigo-100 rounded-lg border border-indigo-200 shadow-sm p-4 mb-6 hover:shadow-md transition-shadow">
       <label className="text-sm font-semibold text-gray-700 whitespace-nowrap">Sort:</label>
       
       <select
         value={sortBy}
         onChange={(e) => handleSortChange(e.target.value as SortOption, sortOrder)}
-        className="px-3 py-2.5 text-sm border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 outline-none transition-all hover:border-gray-400 font-medium"
+        className="px-3 py-2.5 text-sm border border-indigo-300 rounded-lg bg-indigo-50 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 outline-none transition-all hover:border-indigo-400 font-medium"
       >
         <option value="title">Title</option>
         <option value="score">Score</option>

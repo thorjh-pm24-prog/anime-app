@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useAnimeStore } from '@/stores/animeStore';
 import { ToastProvider } from '@/components/Toast';
+import { HeartAnimation } from '@/components/HeartAnimation';
 import { DeviceViewportWrapper } from '@/components/DeviceViewportWrapper';
 import { AnimeListPage } from '@/pages/AnimeListPage';
 import { AnimeDetailPage } from '@/pages/AnimeDetailPage';
@@ -27,6 +28,7 @@ function AppRouter() {
 export default function App() {
   return (
     <Router>
+      <HeartAnimation />
       <ToastProvider>
         <DeviceViewportWrapper>
           <AppRouter />

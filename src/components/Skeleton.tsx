@@ -2,7 +2,7 @@ import React from 'react';
 
 export const AnimeCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm h-full flex flex-col animate-pulse">
+    <div className="bg-indigo-100 rounded-lg overflow-hidden shadow-sm h-full flex flex-col animate-pulse">
       {/* Image Skeleton */}
       <div className="aspect-[2/3] bg-gray-200"></div>
 
@@ -59,7 +59,7 @@ export const DetailSkeleton: React.FC = () => {
           <div className="h-6 bg-gray-300 rounded w-1/2"></div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 space-y-4">
+        <div className="bg-indigo-100 rounded-lg p-6 space-y-4">
           <div className="h-6 bg-gray-300 rounded w-32"></div>
           <div className="space-y-2">
             <div className="h-4 bg-gray-200 rounded"></div>
@@ -68,7 +68,7 @@ export const DetailSkeleton: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 space-y-4">
+        <div className="bg-indigo-100 rounded-lg p-6 space-y-4">
           <div className="h-6 bg-gray-300 rounded w-32"></div>
           <div className="flex flex-wrap gap-2">
             {Array.from({ length: 4 }).map((_, i) => (

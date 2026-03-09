@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSound } from '@/hooks/useSound';
 
 interface ScrollToTopButtonProps {
   threshold?: number;
@@ -6,6 +7,7 @@ interface ScrollToTopButtonProps {
 
 export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ threshold = 300 }) => {
   const [isVisible, setIsVisible] = React.useState(false);
+  const { playClick } = useSound();
 
   React.useEffect(() => {
     const toggleVisibility = () => {
@@ -17,6 +19,7 @@ export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ threshold 
   }, [threshold]);
 
   const scrollToTop = () => {
+    playClick();
     window.scrollTo({
       top: 0,
       behavior: 'smooth',

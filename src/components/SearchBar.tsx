@@ -47,7 +47,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             value={query}
             onChange={handleChange}
             placeholder={placeholder}
-            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg bg-white text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-30 transition-all shadow-sm"
+            className="w-full px-4 py-3 text-base border border-indigo-300 rounded-lg bg-indigo-50 text-gray-900 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-30 transition-all shadow-sm"
             aria-label="Search anime"
           />
           {query && (

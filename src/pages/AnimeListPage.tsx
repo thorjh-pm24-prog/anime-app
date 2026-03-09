@@ -178,26 +178,26 @@ export const AnimeListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-gray-50 flex flex-col">
       <SkipToMainContent />
       <Header />
 
       {/* Device View Selector - Fixed Top Right Corner */}
-      <div className="fixed top-4 right-4 sm:top-5 sm:right-6 z-50 bg-white rounded-lg border border-gray-200 border-opacity-70 shadow-lg p-2.5 sm:p-3">
+      <div className="fixed top-4 right-4 sm:top-5 sm:right-6 z-50 bg-indigo-100 rounded-lg border border-indigo-200 shadow-lg p-2.5 sm:p-3">
         <DevicePreview
           currentDevice={deviceMode as DeviceType}
           onDeviceChange={(device) => setDeviceMode(device as any)}
         />
       </div>
 
-      <header className="bg-white border-b border-gray-200 border-opacity-50 sticky top-16 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col gap-5">
+      <header className="bg-gradient-to-r from-indigo-100 via-purple-50 to-indigo-100 border-b border-indigo-300 sticky top-16 z-30 shadow-lg backdrop-blur-sm bg-opacity-95">
+        <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8">
+          <div className="flex flex-col gap-5 animate-fade-in">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent mb-2 tracking-tight">
                 Anime Discovery
               </h1>
-              <p className="text-sm text-gray-600">Find and save your favorite anime titles</p>
+              <p className="text-sm md:text-base text-gray-600 font-medium">Discover and save your favorite anime titles</p>
             </div>
             
             <SearchBar
@@ -249,7 +249,7 @@ export const AnimeListPage: React.FC = () => {
           {!loading && !error && filteredAndSortedAnimes.length > 0 && (
             <div className="space-y-8">
               {/* Results Summary */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-200 border-opacity-50">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-indigo-100 rounded-lg p-4 shadow-sm border border-indigo-200">
                 <div className="text-sm text-gray-700 font-medium">
                   Showing <span className="font-bold text-blue-600">{filteredAndSortedAnimes.length}</span> result{filteredAndSortedAnimes.length !== 1 ? 's' : ''}
                   {Object.values(filters).some(v => v) && (

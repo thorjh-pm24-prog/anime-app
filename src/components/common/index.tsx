@@ -8,7 +8,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message = 'Loadi
   return (
     <div className="flex flex-col items-center justify-center py-16">
       <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-black-200 border-t-blue-600"></div>
       </div>
       <p className="mt-4 text-gray-600 font-medium">{message}</p>
     </div>

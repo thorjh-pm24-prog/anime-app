@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSound } from '@/hooks/useSound';
 
 export type DeviceType = 'phone' | 'tablet' | 'desktop';
 
@@ -41,6 +42,7 @@ export const DevicePreview: React.FC<DevicePreviewProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { playClick } = useSound();
 
   const devices: Array<{ type: DeviceType; label: string }> = [
     { type: 'phone', label: 'Phone' },
@@ -65,17 +67,21 @@ export const DevicePreview: React.FC<DevicePreviewProps> = ({
   }, [isOpen]);
 
   const handleDeviceSelect = (device: DeviceType) => {
+    playClick();
     onDeviceChange(device);
     setIsOpen(false);
   };
 
   return (
     <div className="relative" ref={menuRef}>
-      <div className="flex gap-0 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+      <div className="flex gap-0 bg-gradient-to-r from-indigo-100 to-purple-50 rounded-lg border border-indigo-300 overflow-hidden shadow-md">
         {/* Main button showing current device */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="px-3 py-1.5 sm:py-2 bg-white text-gray-900 font-medium transition-all flex items-center gap-2 text-xs sm:text-sm hover:bg-gray-50 focus:outline-none"
+          onClick={() => {
+            playClick();
+            setIsOpen(!isOpen);
+          }}
+          className="px-3 py-1.5 sm:py-2 bg-white text-gray-900 font-semibold transition-all duration-300 flex items-center gap-2 text-xs sm:text-sm hover:bg-indigo-50 focus:outline-none"
           title={`Current: ${currentLabel} view`}
           aria-label={`Device selector: ${currentLabel}`}
         >
@@ -87,9 +93,12 @@ export const DevicePreview: React.FC<DevicePreviewProps> = ({
 
         {/* Dropdown toggle button */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className={`px-2 py-1.5 sm:py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors border-l border-gray-200 focus:outline-none ${
-            isOpen ? 'bg-gray-200' : ''
+          onClick={() => {
+            playClick();
+            setIsOpen(!isOpen);
+          }}
+          className={`px-2 py-1.5 sm:py-2 bg-gradient-to-r from-indigo-100 to-purple-50 text-gray-600 hover:bg-indigo-200 transition-all duration-300 border-l border-indigo-300 focus:outline-none ${
+            isOpen ? 'bg-indigo-200' : ''
           }`}
           aria-label="Toggle device menu"
           aria-expanded={isOpen}
@@ -108,15 +117,15 @@ export const DevicePreview: React.FC<DevicePreviewProps> = ({
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-40">
+        <div className="absolute top-full right-0 mt-2 bg-white border border-sky-300 rounded-lg shadow-xl z-50 min-w-44 overflow-hidden animate-scale">
           {devices.map((device) => (
             <button
               key={device.type}
               onClick={() => handleDeviceSelect(device.type)}
-              className={`w-full px-4 py-2.5 text-left flex items-center gap-3 font-medium transition-colors text-sm ${
+              className={`w-full px-4 py-2.5 text-left flex items-center gap-3 font-semibold transition-all duration-300 text-sm ${
                 currentDevice === device.type
-                  ? 'bg-blue-50 text-blue-600 border-l-2 border-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50 border-l-2 border-transparent'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white border-l-2 border-white'
+                  : 'text-gray-700 hover:bg-indigo-50 border-l-2 border-transparent hover:border-indigo-300'
               } focus:outline-none`}
               aria-label={`Switch to ${device.label} view`}
             >

@@ -17,7 +17,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { isFavorite, addFavorite, removeFavorite } = useAnimeStore();
-  const { playClick } = useSound();
+  const { playLove } = useSound();
   const favorite = isFavorite(anime.mal_id);
 
   const imageUrl = imageError
@@ -26,11 +26,13 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    playClick();
+    playLove();
     if (favorite) {
       removeFavorite(anime.mal_id);
     } else {
       addFavorite(anime);
+      // Trigger heart animation
+      window.dispatchEvent(new Event('heart-click'));
     }
   };
 
@@ -43,7 +45,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
     return (
       <div
         onClick={handleCardClick}
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer p-5 flex gap-4 border border-gray-100 hover:-translate-y-0.5 group"
+        className="bg-indigo-100 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer p-5 flex gap-4 border border-indigo-200 hover:-translate-y-0.5 group"
         tabIndex={0}
         role="button"
         aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -107,18 +109,17 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
         {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
-          className={`flex-shrink-0 px-3 py-2 text-xs font-semibold rounded-lg transition-all shadow-sm flex items-center gap-1 ${
+          className={`flex-shrink-0 p-2.5 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 ${
             favorite
-              ? 'bg-red-500 text-white'
+              ? 'bg-gradient-to-br from-red-500 to-pink-600 text-white'
               : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
           }`}
           aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
           title={favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <svg className="w-4 h-4" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-5 h-5 ${favorite ? 'drop-shadow-md' : ''}`} fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
-          <span>{favorite ? 'Saved' : 'Save'}</span>
         </button>
       </div>
     );
@@ -129,7 +130,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
     return (
       <div
         onClick={handleCardClick}
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-gray-100"
+        className="bg-indigo-100 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-indigo-200"
         tabIndex={0}
         role="button"
         aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -158,15 +159,15 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
           {/* Favorite Button */}
           <button
             onClick={handleFavoriteClick}
-            className={`absolute top-2 right-2 p-1.5 text-xs font-semibold rounded-lg shadow-md transition-all flex items-center justify-center ${
+            className={`absolute top-2 right-2 p-2 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 ${
               favorite
-                ? 'bg-red-500 text-white'
+                ? 'bg-gradient-to-br from-red-500 to-pink-600 text-white'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
             }`}
             aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
             title={favorite ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <svg className="w-4 h-4" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-4 h-4 ${favorite ? 'drop-shadow-md' : ''}`} fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>
@@ -195,7 +196,7 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-gray-100"
+      className="bg-sky-100 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col hover:-translate-y-1 group border border-sky-200"
       tabIndex={0}
       role="button"
       aria-label={`${anime.title} - ${anime.score || 'N/A'} rating`}
@@ -224,15 +225,15 @@ export const AnimeCardCompact: React.FC<AnimeCardProps> = ({
         {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
-          className={`absolute top-3 right-3 p-2 text-xs font-semibold rounded-lg shadow-md transition-all flex items-center justify-center ${
+          className={`absolute top-3 right-3 p-2.5 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 ${
             favorite
-              ? 'bg-red-500 text-white'
+              ? 'bg-gradient-to-br from-red-500 to-pink-600 text-white'
               : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
           }`}
           aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
           title={favorite ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <svg className="w-5 h-5" fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-5 h-5 ${favorite ? 'drop-shadow-md' : ''}`} fill={favorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
